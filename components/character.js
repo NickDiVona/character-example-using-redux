@@ -9,6 +9,18 @@ import {
 } from "../redux/actionCreators";
 import CustomButton from "./customButton";
 
+const mapStateToProps = (state) => {
+  return {
+    character: state.character
+  };
+};
+
+const mapDispatchToProps = {
+  decreaseHealth: () => decreaseHealth(),
+  resetHealth: () => resetHealth(),
+  decreaseHealthByAmount: (damage, currentHealth) => decreaseHealthByAmount(damage, currentHealth),
+  useHealthPotion: (currentHealth) => useHealthPotion(currentHealth)
+};
 class Character extends Component {
   constructor(props) {
     super(props);
@@ -29,8 +41,8 @@ class Character extends Component {
       this.props;
 
     return (
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ fontSize: 24 }}>{this.showLifeLogo(character.health)}</Text>
+      <View style={styles.container}>
+        <Text style={styles.titleText}>{this.showLifeLogo(character.health)}</Text>
         <Text style={styles.titleText}>Character HP: {character.health}</Text>
         {character.health > 0 ? (
           <View>
@@ -58,21 +70,9 @@ class Character extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    character: state.character
-  };
-};
-
-const mapDispatchToProps = {
-  decreaseHealth: () => decreaseHealth(),
-  resetHealth: () => resetHealth(),
-  decreaseHealthByAmount: (damage, currentHealth) => decreaseHealthByAmount(damage, currentHealth),
-  useHealthPotion: (currentHealth) => useHealthPotion(currentHealth)
-};
-
 export default connect(mapStateToProps, mapDispatchToProps)(Character);
 
 const styles = StyleSheet.create({
+  container: { justifyContent: "center", alignItems: "center" },
   titleText: { marginBottom: 40, fontSize: 24 }
 });
