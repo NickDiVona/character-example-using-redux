@@ -2,13 +2,11 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import Character from "./components/character";
 import { Provider } from "react-redux";
-import { configureStore } from "./redux/store";
+import { store } from "./redux/store";
 
 export default function App() {
-  const myStore = configureStore();
-
   return (
-    <Provider store={myStore}>
+    <Provider store={store}>
       <View style={styles.container}>
         <Character />
         <StatusBar style="auto" />

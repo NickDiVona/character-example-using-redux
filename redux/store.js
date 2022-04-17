@@ -1,12 +1,10 @@
-import { createStore, combineReducers } from "redux";
-import { characterReducer } from "./reducers/characterReducer";
+import { configureStore } from "@reduxjs/toolkit";
+import characterReducer from "./character/character.reducer";
 
-export const configureStore = () => {
-  const store = createStore(
-    combineReducers({
-      character: characterReducer
-    })
-  );
-
-  return store;
-};
+export const store = configureStore({
+  // similar to combineReducers from redux
+  reducer: {
+    character: characterReducer
+  }
+  //add middleware if you have it here
+});

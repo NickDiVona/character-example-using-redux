@@ -1,17 +1,18 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { characterHealthSelector } from "../redux/character/chracter.selectors";
 import {
   decreaseHealth,
   resetHealth,
-  decreaseHealthByAmount,
-  useHealthPotion
-} from "../redux/actionCreators";
+  useHealthPotion,
+  decreaseHealthByAmount
+} from "../redux/character/character.reducer";
 import CustomButton from "./customButton";
 
 const Character = () => {
   const dispatch = useDispatch();
-  const character = useSelector((state) => state.character);
+  const characterHealth = useSelector(characterHealthSelector);
 
   const showLifeLogo = (healthVal) => {
     if (healthVal >= 15) {
@@ -25,9 +26,9 @@ const Character = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titleText}>{showLifeLogo(character.health)}</Text>
-      <Text style={styles.titleText}>Character HP: {character.health}</Text>
-      {character.health > 0 ? (
+      <Text style={styles.titleText}>{showLifeLogo(characterHealth)}</Text>
+      <Text style={styles.titleText}>Character HP: {characterHealth}</Text>
+      {characterHealth > 0 ? (
         <View>
           <CustomButton
             onPress={() => dispatch(decreaseHealth())}
@@ -35,12 +36,12 @@ const Character = () => {
             bgColor="tomato"
           />
           <CustomButton
-            onPress={() => dispatch(decreaseHealthByAmount(4, character.health))}
+            onPress={() => dispatch(decreaseHealthByAmount(4))}
             buttonText="Direct hit (HP - 4)"
             bgColor="red"
           />
           <CustomButton
-            onPress={() => dispatch(useHealthPotion(character.health))}
+            onPress={() => dispatch(useHealthPotion())}
             buttonText="Use potion (HP +5)"
             bgColor="mediumseagreen"
           />
