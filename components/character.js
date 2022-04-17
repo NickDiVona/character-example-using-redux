@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   decreaseHealth,
   resetHealth,
@@ -9,24 +9,11 @@ import {
 } from "../redux/actionCreators";
 import CustomButton from "./customButton";
 
-const mapStateToProps = (state) => {
-  return {
-    character: state.character
-  };
-};
+const Character = () => {
+  const dispatch = useDispatch();
+  const character = useSelector((state) => state.character);
 
-const mapDispatchToProps = {
-  decreaseHealth: () => decreaseHealth(),
-  resetHealth: () => resetHealth(),
-  decreaseHealthByAmount: (damage, currentHealth) => decreaseHealthByAmount(damage, currentHealth),
-  useHealthPotion: (currentHealth) => useHealthPotion(currentHealth)
-};
-class Character extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  showLifeLogo = (healthVal) => {
+  const showLifeLogo = (healthVal) => {
     if (healthVal >= 15) {
       return "❤️";
     } else if (healthVal > 0) {
@@ -36,41 +23,40 @@ class Character extends Component {
     }
   };
 
-  render() {
-    const { decreaseHealth, resetHealth, decreaseHealthByAmount, useHealthPotion, character } =
-      this.props;
+  return (
+    <View style={styles.container}>
+      <Text style={styles.titleText}>{showLifeLogo(character.health)}</Text>
+      <Text style={styles.titleText}>Character HP: {character.health}</Text>
+      {character.health > 0 ? (
+        <View>
+          <CustomButton
+            onPress={() => dispatch(decreaseHealth())}
+            buttonText="Block attack (HP - 1)"
+            bgColor="tomato"
+          />
+          <CustomButton
+            onPress={() => dispatch(decreaseHealthByAmount(4, character.health))}
+            buttonText="Direct hit (HP - 4)"
+            bgColor="red"
+          />
+          <CustomButton
+            onPress={() => dispatch(useHealthPotion(character.health))}
+            buttonText="Use potion (HP +5)"
+            bgColor="mediumseagreen"
+          />
+        </View>
+      ) : (
+        <CustomButton
+          onPress={() => dispatch(resetHealth())}
+          buttonText="Respawn"
+          bgColor={"royalblue"}
+        />
+      )}
+    </View>
+  );
+};
 
-    return (
-      <View style={styles.container}>
-        <Text style={styles.titleText}>{this.showLifeLogo(character.health)}</Text>
-        <Text style={styles.titleText}>Character HP: {character.health}</Text>
-        {character.health > 0 ? (
-          <View>
-            <CustomButton
-              onPress={() => decreaseHealth()}
-              buttonText="Block attack (HP - 1)"
-              bgColor="tomato"
-            />
-            <CustomButton
-              onPress={() => decreaseHealthByAmount(4, character.health)}
-              buttonText="Direct hit (HP - 4)"
-              bgColor="red"
-            />
-            <CustomButton
-              onPress={() => useHealthPotion(character.health)}
-              buttonText="Use potion (HP +5)"
-              bgColor="mediumseagreen"
-            />
-          </View>
-        ) : (
-          <CustomButton onPress={() => resetHealth()} buttonText="Respawn" bgColor={"royalblue"} />
-        )}
-      </View>
-    );
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Character);
+export default Character;
 
 const styles = StyleSheet.create({
   container: { justifyContent: "center", alignItems: "center" },
